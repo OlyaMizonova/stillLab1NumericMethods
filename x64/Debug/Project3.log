@@ -1,0 +1,11 @@
+﻿  MyForm.cpp
+D:\study\forcpp\informatics\yaziki_i_metodi\git_labs\Project3\MyForm.h(1267,79): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+D:\study\forcpp\informatics\yaziki_i_metodi\git_labs\Project3\MyForm.h(1321,1): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\study\forcpp\informatics\yaziki_i_metodi\git_labs\Project3\MyForm.h(1380,1): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\study\forcpp\informatics\yaziki_i_metodi\git_labs\Project3\MyForm.h(1387,85): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+D:\study\forcpp\informatics\yaziki_i_metodi\git_labs\Project3\MyForm.h(1414,1): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\study\forcpp\informatics\yaziki_i_metodi\git_labs\Project3\MyForm.h(1474,108): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+D:\study\forcpp\informatics\yaziki_i_metodi\git_labs\Project3\MyForm.h(1506,1): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\study\forcpp\informatics\yaziki_i_metodi\git_labs\Project3\MyForm.h(1763,107): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+  All functions for equation.obj : обнаружен модуль MSIL; для MSIL последовательная компоновка отключена; выполняется полная компоновка
+  Project3.vcxproj -> D:\study\forcpp\informatics\yaziki_i_metodi\git_labs\Project3\x64\Debug\Project3.exe
