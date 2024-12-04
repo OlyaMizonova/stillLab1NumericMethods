@@ -1327,12 +1327,12 @@ namespace lab1Nimeric {
 				double total_doub = changes_of_the_step[size(result) - 1].second;
 				div->Text = System::Convert::ToString(total_divisions);
 				doub->Text = System::Convert::ToString(total_doub);
-				Series^ series2 = gcnew Series();
-				series2->ChartType = SeriesChartType::Spline;
-				series2->Color = System::Drawing::Color::Green;
-				series2->LegendText = "Численное решение с шагом в 2 раза меньше";
-				series2->DataPointCustomProperties::BorderWidth = 2;
-				picture->Series->Add(series2);
+				//Series^ series2 = gcnew Series();
+				//series2->ChartType = SeriesChartType::Spline;
+				//series2->Color = System::Drawing::Color::Green;
+				//series2->LegendText = "Численное решение с шагом в 2 раза меньше";
+				//series2->DataPointCustomProperties::BorderWidth = 2;
+				//picture->Series->Add(series2);
 				double maxOlp = 0.0;
 				for (int k = 0; k < size(result); k++) {
 					if (maxOlp < result[k][4]) {
@@ -1363,7 +1363,7 @@ namespace lab1Nimeric {
 					picture->Series[0]->Points->AddXY(x, y);//рисуем численную траекторию
 					picture->Series[1]->Points->AddXY(x, Uist);//рисуем истинную траекторию
 					double y2 = result[j][2];
-					picture->Series[2]->Points->AddXY(x, y2);//рисуем численную траекторию с шагом в 2 раза меньше
+					//picture->Series[2]->Points->AddXY(x, y2);//рисуем численную траекторию с шагом в 2 раза меньше
 					Table->Rows->Add();
 					Table->Rows[j]->Cells[0]->Value = j + 1;
 					Table->Rows[j]->Cells[1]->Value = x;
@@ -1418,12 +1418,12 @@ namespace lab1Nimeric {
 				double total_doub = changes_of_the_step[size(result) - 1].second;
 				div->Text = System::Convert::ToString(total_divisions);
 				doub->Text = System::Convert::ToString(total_doub);
-				Series^ series2 = gcnew Series();
+				/*Series^ series2 = gcnew Series();
 				series2->ChartType = SeriesChartType::Spline;
 				series2->Color = System::Drawing::Color::Green;
 				series2->LegendText = "Численное решение с шагом в 2 раза меньше";
 				series2->DataPointCustomProperties::BorderWidth = 2;
-				picture->Series->Add(series2);
+				picture->Series->Add(series2);*/
 				double maxOlp = 0;
 				for (int k = 0; k < size(result); k++) {
 					if (maxOlp < result[k][4]) {
@@ -1452,8 +1452,8 @@ namespace lab1Nimeric {
 					double y = result[j][1];
 					this->picture->Series[0]->Points->AddXY(x, y);
 					double y2 = result[j][2];
-					picture->Series[1]->Points->AddXY(x, y2);//рисуем численную траекторию с шагом в 2 раза меньше
-					picture->Series[0]->Points->AddXY(x, y);
+					//picture->Series[1]->Points->AddXY(x, y2);//рисуем численную траекторию с шагом в 2 раза меньше
+					//picture->Series[0]->Points->AddXY(x, y);
 					Table->Rows->Add();
 					Table->Rows[j]->Cells[0]->Value = j + 1;
 					Table->Rows[j]->Cells[1]->Value = x;
@@ -1547,8 +1547,8 @@ namespace lab1Nimeric {
 					double x = result[j][0];
 					double y = result[j][1];
 					picture->Series[0]->Points->AddXY(x, y);
-					double y2 = result[j][3];
-					picture->Series[1]->Points->AddXY(x, y2);//рисуем численную траекторию с шагом в 2 раза меньше
+					double y2 = result[j][2];
+					picture->Series[1]->Points->AddXY(x, y2);//рисуем численную траекторию второй компоненты
 					Table->Rows->Add();
 					Table->Rows[j]->Cells[0]->Value = j + 1;
 					Table->Rows[j]->Cells[1]->Value = x;

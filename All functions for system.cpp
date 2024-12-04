@@ -2,9 +2,9 @@
 // Функция f(x, v) для системы уравнений
 
 
-pair<double, double> f_second_task(double u_1, double u_2, double x, double a, double b) {
+pair<double, double> f_second_task(double x,double u_1, double u_2,  double a, double b) {
     double du1_dx = u_2;
-    double du2_dx = -pow(a, 2) * sin(u_1) - b * sin(x);
+    double du2_dx = -a*u_2 - b * sin(u_1);
 
     return { du1_dx, du2_dx };
 }
@@ -43,14 +43,14 @@ double calculate_S_for_system(double v_1n_plus_1, double v_12n, double v_2n_plus
 
 int check_the_point_for_system(double v_1n_plus_1, double v_12n, double v_2n_plus_1, double v_22n, double* h, double epsilon) {
     double S = calculate_S_for_system(v_1n_plus_1, v_12n, v_2n_plus_1, v_22n, epsilon);
-    if ((epsilon / 32.0) <= S && S < epsilon) { //хорошая точка
+    if ((epsilon / 32.0) <= S && S <= epsilon) { //хорошая точка
         return 1; //значит, что точка хорошая и мы продолжаем счет
     }
     if (S < (epsilon / 32.0)) {
         *h = *h * 2;
         return 2; //аналогично с предыдущим случаем, только еще поменяли шаг
     }
-    if (S >= epsilon) {//точка плохая, меняем шаг и начинаем той же точки (xn,v_1,v_2)
+    if (S > epsilon) {//точка плохая, меняем шаг и начинаем той же точки (xn,v_1,v_2)
         *h = *h / 2.0;
         return 0;
     }
@@ -104,7 +104,11 @@ vector<vector<double>> runge_kutta_4th_order_for_system(pair<double, double>(*f)
                     xn = get<0>(new_point);
                     v_1n = get<1>(new_point);//обновляем точку
                     v_2n = get<2>(new_point);//обновляем точку
-                    vector<double> new_raw = { xn, v_1n,v_2n, v_12n,v_22n, (v_1n - v_12n),(v_2n - v_22n),32*calculate_S_for_system(v_1n,v_1n,v_12n,v_22n,epsilon),hn };//наш результат за этот шаг
+                    double h_to_turn = hn;
+                    if (olp == 2) {
+                        h_to_turn /= 2;
+                    }
+                    vector<double> new_raw = { xn, v_1n,v_2n, v_12n,v_22n, (v_1n - v_12n),(v_2n - v_22n),32*calculate_S_for_system(v_1n,v_1n,v_12n,v_22n,epsilon),h_to_turn };//наш результат за этот шаг
                     numerical_solution.push_back(new_raw);
                     break;
                 }
