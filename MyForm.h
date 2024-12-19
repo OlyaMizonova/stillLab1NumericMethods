@@ -1345,7 +1345,7 @@ namespace lab1Nimeric {
 						x_max = result[k][0];
 					}
 				}
-				for (int k = 0; k < size(result); k++) {
+				for (int k = 1; k < size(result); k++) {
 					if (h_min > result[k][5]) {
 						h_min = result[k][5];
 						x_min = result[k][0];
@@ -1425,7 +1425,7 @@ namespace lab1Nimeric {
 				series2->DataPointCustomProperties::BorderWidth = 2;
 				picture->Series->Add(series2);*/
 				double maxOlp = 0;
-				for (int k = 0; k < size(result); k++) {
+				for (int k = 0; k < result.size(); k++) {
 					if (maxOlp < result[k][4]) {
 						maxOlp = result[k][4];
 					}
@@ -1436,7 +1436,7 @@ namespace lab1Nimeric {
 						x_max = result[k][0];
 					}
 				}
-				for (int k = 0; k < size(result); k++) {
+				for (int k = 1; k < size(result); k++) {
 					if (h_min > result[k][5]) {
 						h_min = result[k][5];
 						x_min = result[k][0];
@@ -1526,7 +1526,7 @@ namespace lab1Nimeric {
 						x_max = result[k][0];
 					}
 				}
-				for (int k = 0; k < size(result); k++) {
+				for (int k = 1; k < size(result); k++) {
 					if (h_min > result[k][8]) {
 						h_min = result[k][8];
 						x_min = result[k][0];
@@ -1744,14 +1744,14 @@ namespace lab1Nimeric {
 		double maxStep = Convert::ToInt32(MaxStep->Text);
 		double rightBoarder = Convert::ToDouble(RightBoarder->Text);
 		double EpsilonBoarder = Convert::ToDouble(epsilonBoarder->Text);
-		double Epsilon = 0.01;
+		double Epsilon;
 		double C1 = 0, C2 = 0;
 		vector<pair<double, double>> changes_of_the_step = { {C1,C2} };
 		vector<pair<double, double>> for_test_task;
 		int i = 0;
 		if (withControl->Checked) {
 			i = 1; //с контролем локальной погрешности
-			double Epsilon = Convert::ToDouble(epsilon->Text);
+			Epsilon = Convert::ToDouble(epsilon->Text);
 		}
 		double h_max = InitialStep;
 		double x_max = LeftBoarder;
