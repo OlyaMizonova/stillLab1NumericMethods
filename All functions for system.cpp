@@ -2,9 +2,9 @@
 // Функция f(x, v) для системы уравнений
 
 
-pair<double, double> f_second_task(double x,double u_1, double u_2,  double a, double b) {
+pair<double, double> f_second_task(double x, double u_1, double u_2, double a, double b) {
     double du1_dx = u_2;
-    double du2_dx = -a*u_2 - b * sin(u_1);
+    double du2_dx = -a * u_2 - b * sin(u_1);
 
     return { du1_dx, du2_dx };
 }
@@ -43,14 +43,14 @@ double calculate_S_for_system(double v_1n_plus_1, double v_12n, double v_2n_plus
 
 int check_the_point_for_system(double v_1n_plus_1, double v_12n, double v_2n_plus_1, double v_22n, double* h, double epsilon) {
     double S = calculate_S_for_system(v_1n_plus_1, v_12n, v_2n_plus_1, v_22n, epsilon);
-    if ((epsilon / 32.0) <= S && S <= epsilon) { //хорошая точка
+    if ((epsilon / 32.0) <= S && S < epsilon) { //хорошая точка
         return 1; //значит, что точка хорошая и мы продолжаем счет
     }
     if (S < (epsilon / 32.0)) {
         *h = *h * 2;
         return 2; //аналогично с предыдущим случаем, только еще поменяли шаг
     }
-    if (S > epsilon) {//точка плохая, меняем шаг и начинаем той же точки (xn,v_1,v_2)
+    if (S >= epsilon) {//точка плохая, меняем шаг и начинаем той же точки (xn,v_1,v_2)
         *h = *h / 2.0;
         return 0;
     }
@@ -89,7 +89,7 @@ vector<vector<double>> runge_kutta_4th_order_for_system(pair<double, double>(*f)
                 v_22n = get<2>(new_point_with_half_step);
 
                 int olp = check_the_point_for_system(get<1>(new_point), get<1>(new_point_with_half_step),
-                                                        get<2>(new_point), get<2>(new_point_with_half_step), &hn, epsilon);
+                    get<2>(new_point), get<2>(new_point_with_half_step), &hn, epsilon);
                 // 1 - точка хорошая, шаг тот же,
                 //2 - точка хорошая, шаг в два раза больше,
                 //0 - точка плохая, шаг в два раза меньше
@@ -108,7 +108,8 @@ vector<vector<double>> runge_kutta_4th_order_for_system(pair<double, double>(*f)
                     if (olp == 2) {
                         h_to_turn /= 2;
                     }
-                    vector<double> new_raw = { xn, v_1n,v_2n, v_12n,v_22n, (v_1n - v_12n),(v_2n - v_22n),32*calculate_S_for_system(v_1n,v_1n,v_12n,v_22n,epsilon),h_to_turn };//наш результат за этот шаг
+                    double s_to_turn = 16 * calculate_S_for_system(v_1n, v_12n, v_2n, v_22n, epsilon);
+                    vector<double> new_raw = { xn, v_1n,v_2n, v_12n,v_22n, (v_1n - v_12n),(v_2n - v_22n),s_to_turn,h_to_turn };//наш результат за этот шаг
                     numerical_solution.push_back(new_raw);
                     break;
                 }
@@ -120,7 +121,7 @@ vector<vector<double>> runge_kutta_4th_order_for_system(pair<double, double>(*f)
                 break;
             }
             if (xn + hn > right_border + epsilon_border) //если следующий шаг выводит нас из окрестности, то считаем последнюю точку на границе и завершаем счет 
-                                                        //(если только шаг не уменьшается настолько, что мы даже не заходим в эпсилон окрестность - в этом случае просто продолжаем считать)
+                //(если только шаг не уменьшается настолько, что мы даже не заходим в эпсилон окрестность - в этом случае просто продолжаем считать)
             {
                 i++;
                 hn = right_border - xn;
@@ -148,7 +149,11 @@ vector<vector<double>> runge_kutta_4th_order_for_system(pair<double, double>(*f)
                         xn = get<0>(new_point);
                         v_1n = get<1>(new_point);//обновляем точку
                         v_2n = get<2>(new_point);//обновляем точку
-                        vector<double> new_raw = { xn, v_1n,v_2n, v_12n,v_22n, (v_1n - v_12n),(v_2n - v_22n),32*calculate_S_for_system(v_1n,v_1n,v_12n,v_22n,epsilon),hn };//наш результат за этот шаг
+                        double h_to_turn = hn;
+                        if (olp == 2) {
+                            h_to_turn /= 2;
+                        }
+                        vector<double> new_raw = { xn, v_1n,v_2n, v_12n,v_22n, (v_1n - v_12n),(v_2n - v_22n),16 * calculate_S_for_system(v_1n, v_12n, v_2n, v_22n, epsilon),h_to_turn };//наш результат за этот шаг
                         numerical_solution.push_back(new_raw);
                         break;
                     }
@@ -156,7 +161,7 @@ vector<vector<double>> runge_kutta_4th_order_for_system(pair<double, double>(*f)
                 changes_step->push_back({ (*changes_step)[i - 1].first,(*changes_step)[i - 1].second });//добавили счетчик изменения шага для этого шага
             }
             if (right_border - epsilon_border <= xn && xn <= right_border + epsilon_border)   // если мы уже находимся в эпсилон-окрестности правой границы, 
-                                                                                              // то это была последняя точка и мы завершаем счет  
+                // то это была последняя точка и мы завершаем счет  
             {
                 break;
             }
@@ -165,7 +170,7 @@ vector<vector<double>> runge_kutta_4th_order_for_system(pair<double, double>(*f)
     else { //без контроля локальной погрешности
         vector<double> new_raw = { xn, v_1n,v_2n, hn };//положили первую строку сразу
         numerical_solution.push_back(new_raw);
-        for (int i = 0;xn < right_border && i < n_steps; i++) {
+        for (int i = 0; xn < right_border && i < n_steps; i++) {
             //добавить выход за границу
             new_point = step_of_the_method_for_the_system(f, xn, v_1n, v_2n, hn, a, b);
             xn = get<0>(new_point);
@@ -174,7 +179,7 @@ vector<vector<double>> runge_kutta_4th_order_for_system(pair<double, double>(*f)
             vector<double> new_raw = { xn, v_1n,v_2n, hn };//наш результат за этот шаг
             numerical_solution.push_back(new_raw);
             if (right_border - epsilon_border <= xn && xn <= right_border + epsilon_border)   // если мы уже находимся в эпсилон-окрестности правой границы, 
-                                                                                              //то это была последняя точка и мы завершаем счет  
+                //то это была последняя точка и мы завершаем счет  
             {
                 break;
             }

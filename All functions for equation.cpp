@@ -52,8 +52,8 @@ vector<vector<double>> runge_kutta_4th_order(double(*f)(double, double), double 
     double hn = h;  //текущий шаг
     double v2n = v0;//переменная для точек, вычисленных в половинным шагом
     int c1 = 0, c2 = 0, is_task_test = (f == test_f); //c1 - счетчик делений шага пополам, c2 - счетчик удвоений шага, 
-                                                        //is_task_test решаем ли мы сейчас тестовую задачу 
-    //создаю пары вне цикла, чтобы сто раз не выделялась память, а просто перезаписывалось значение
+    //is_task_test решаем ли мы сейчас тестовую задачу 
+//создаю пары вне цикла, чтобы сто раз не выделялась память, а просто перезаписывалось значение
     pair<double, double> half_step_point;//промежуточная точка - половина шага
     pair<double, double> new_point_with_half_step;//основная точка, посчитанная с половинным шагом
     pair<double, double>new_point;//здесь будем хранить сосчитанную точку
@@ -62,7 +62,7 @@ vector<vector<double>> runge_kutta_4th_order(double(*f)(double, double), double 
     vector<vector<double>> numerical_solution;
     test_task->push_back({ u_test(xn, v0), abs(u_test(xn, v0) - vn) });
     if (need_epsilon) { // с контролем локальной погрешности
-        vector<double> new_raw = { xn, vn, NAN, NAN, NAN,hn };//положили первую строку сразу
+        vector<double> new_raw = { xn, vn, NAN, NAN, NAN,0 };//положили первую строку сразу
         numerical_solution.push_back(new_raw);
         for (int i = 1; i < n_steps; i++) {
             c1 = 0, c2 = 0;
@@ -89,7 +89,8 @@ vector<vector<double>> runge_kutta_4th_order(double(*f)(double, double), double 
                     if (olp == 2) {
                         h_to_turn /= 2;
                     }
-                    vector<double> new_raw = { xn, vn, v2n, (vn - v2n), calculate_S(vn,v2n,epsilon),h_to_turn };//наш результат за этот шаг
+                    double s_to_turn = 16 * calculate_S(vn, v2n, epsilon);
+                    vector<double> new_raw = { xn, vn, v2n, (vn - v2n), s_to_turn,h_to_turn };//наш результат за этот шаг
                     numerical_solution.push_back(new_raw);
                     if (is_task_test) {//для тестовой задачи еще аналитическое решение
                         test_task->push_back({ u_test(xn,v0),abs(u_test(xn,v0) - vn) });
@@ -125,7 +126,7 @@ vector<vector<double>> runge_kutta_4th_order(double(*f)(double, double), double 
                     if (olp) {//если точка хорошая
                         xn = new_point.first;
                         vn = new_point.second;//обновляем точку
-                        vector<double> new_raw = { xn, vn, v2n, (vn - v2n), calculate_S(vn,v2n,epsilon),hn };//наш результат за этот шаг
+                        vector<double> new_raw = { xn, vn, v2n, (vn - v2n), 16 * calculate_S(vn,v2n,epsilon),hn };//наш результат за этот шаг
                         numerical_solution.push_back(new_raw);
                         if (is_task_test) {//для тестовой задачи еще аналитическое решение
                             test_task->push_back({ u_test(xn,v0),abs(u_test(xn,v0) - vn) });
@@ -133,10 +134,10 @@ vector<vector<double>> runge_kutta_4th_order(double(*f)(double, double), double 
                         break;
                     }
                 }
-                changes_step->push_back({ (*changes_step)[i - 1].first,(*changes_step)[i - 1].second});
+                changes_step->push_back({ (*changes_step)[i - 1].first,(*changes_step)[i - 1].second });
             }
             if (right_border - epsilon_border <= xn && xn <= right_border + epsilon_border) { // если мы уже находимся в эпсилон-окрестности правой границы, 
-                                                                                              //то это была последняя точка и мы завершаем счет 
+                //то это была последняя точка и мы завершаем счет 
                 break;
             }
         }
@@ -158,7 +159,7 @@ vector<vector<double>> runge_kutta_4th_order(double(*f)(double, double), double 
                 numerical_solution.push_back(new_raw);
             }
             if (right_border - epsilon_border <= xn && xn <= right_border + epsilon_border) { // если мы уже находимся в эпсилон-окрестности правой границы, 
-                                                                                              //то это была последняя точка и мы завершаем счет
+                //то это была последняя точка и мы завершаем счет
                 break;
             }
             else if (xn + hn > right_border + epsilon_border) { //если следующий шаг выводит нас из окрестности, то считаем последнюю точку на границе и завершаем счет
